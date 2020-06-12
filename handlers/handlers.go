@@ -5,6 +5,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/ArturoArreola/demo-social-network/middlew"
+	"github.com/ArturoArreola/demo-social-network/routers"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
@@ -12,6 +14,9 @@ import (
 // Manejadores es la función donde se setea el puerto y el Handler, y se escucha el servidor
 func Manejadores() {
 	router := mux.NewRouter()
+
+	// Router para registro de usuario
+	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
