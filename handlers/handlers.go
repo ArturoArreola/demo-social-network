@@ -11,12 +11,14 @@ import (
 	"github.com/rs/cors"
 )
 
-// Manejadores es la función donde se setea el puerto y el Handler, y se escucha el servidor
+// Manejadores es la función donde se setea el puerto y el Handler, y escucha el servidor
 func Manejadores() {
 	router := mux.NewRouter()
 
 	// Router para registro de usuario
 	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
+	router.HandleFunc("/login", middlew.CheckDB(routers.Login)).Methods("POST")
+	router.HandleFunc("/perfil", middlew.CheckDB(middlew.ValidarJWT(routers.VerPerfil))).Methods("GET")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
