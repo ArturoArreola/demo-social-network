@@ -19,6 +19,8 @@ func Manejadores() {
 	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
 	router.HandleFunc("/login", middlew.CheckDB(routers.Login)).Methods("POST")
 	router.HandleFunc("/perfil", middlew.CheckDB(middlew.ValidarJWT(routers.VerPerfil))).Methods("GET")
+	router.HandleFunc("/modificarPerfil", middlew.CheckDB(middlew.ValidarJWT(routers.ModificarPerfil))).Methods("PUT")
+	router.HandleFunc("/nuevoPost", middlew.CheckDB(middlew.ValidarJWT(routers.NuevaPublicacion))).Methods("POST")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
