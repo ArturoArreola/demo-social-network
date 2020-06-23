@@ -8,6 +8,7 @@ import (
 	"github.com/ArturoArreola/demo-social-network/models"
 )
 
+// ModificarPerfil es la función para poder modificar la información del perfil del usuario
 func ModificarPerfil(w http.ResponseWriter, r *http.Request) {
 
 	var modelo models.Usuario

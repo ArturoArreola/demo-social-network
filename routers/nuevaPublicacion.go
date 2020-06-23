@@ -9,7 +9,7 @@ import (
 	"github.com/ArturoArreola/demo-social-network/models"
 )
 
-// NuevaPublicacion
+// NuevaPublicacion es la función para registrar un nuevo post
 func NuevaPublicacion (w http.ResponseWriter, r *http.Request) {
 
 	var mensaje models.Post
@@ -34,6 +34,5 @@ func NuevaPublicacion (w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusCreated)
-
 
 }
