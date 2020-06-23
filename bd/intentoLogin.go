@@ -11,7 +11,7 @@ import (
 func IntentoLogin(email string, password string) (models.Usuario, bool) {
 	usuario, encontrado, idUsuario := CheckUsuarioExiste(email)
 
-	fmt.Println("Este es el Id del Usuario %s", idUsuario)
+	fmt.Println("Este es el ID del usuario -> ", idUsuario)
 	if encontrado == false {
 		return usuario, false
 	}

@@ -11,6 +11,7 @@ import (
 
 // BuscarPerfil es la funcion para buscar el perfil del usuario con base en su ID usuario
 func BuscarPerfil (ID string) (models.Usuario, error) {
+
 	ctx, cancel := context.WithTimeout(context.Background(),time.Second*15)
 	defer cancel()
 
