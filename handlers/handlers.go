@@ -23,6 +23,10 @@ func Manejadores() {
 	router.HandleFunc("/nuevoPost", middlew.CheckDB(middlew.ValidarJWT(routers.NuevaPublicacion))).Methods("POST")
 	router.HandleFunc("/obtenerPosts", middlew.CheckDB(middlew.ValidarJWT(routers.ObtenerPublicacion))).Methods("GET")
 	router.HandleFunc("/borrarPost", middlew.CheckDB(middlew.ValidarJWT(routers.BorrarPublicacion))).Methods("DELETE")
+	router.HandleFunc("/subirAvatar", middlew.CheckDB(middlew.ValidarJWT(routers.SubirAvatar))).Methods("POST")
+	router.HandleFunc("/obtenerAvatar", middlew.CheckDB(routers.ObtenerAvatar)).Methods("GET")
+	router.HandleFunc("/subirBanner", middlew.CheckDB(middlew.ValidarJWT(routers.SubirBanner))).Methods("POST")
+	router.HandleFunc("/obtenerBanner", middlew.CheckDB(routers.ObtenerBanner)).Methods("GET")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
