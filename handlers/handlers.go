@@ -15,20 +15,27 @@ import (
 func Manejadores() {
 	router := mux.NewRouter()
 
-	// Router para registro de usuario
+	// API Endpoints
 	router.HandleFunc("/registro", middlew.CheckDB(routers.Registro)).Methods("POST")
 	router.HandleFunc("/login", middlew.CheckDB(routers.Login)).Methods("POST")
+
 	router.HandleFunc("/perfil", middlew.CheckDB(middlew.ValidarJWT(routers.VerPerfil))).Methods("GET")
 	router.HandleFunc("/modificarPerfil", middlew.CheckDB(middlew.ValidarJWT(routers.ModificarPerfil))).Methods("PUT")
+
 	router.HandleFunc("/nuevoPost", middlew.CheckDB(middlew.ValidarJWT(routers.NuevaPublicacion))).Methods("POST")
 	router.HandleFunc("/obtenerPosts", middlew.CheckDB(middlew.ValidarJWT(routers.ObtenerPublicacion))).Methods("GET")
 	router.HandleFunc("/borrarPost", middlew.CheckDB(middlew.ValidarJWT(routers.BorrarPublicacion))).Methods("DELETE")
+
 	router.HandleFunc("/subirAvatar", middlew.CheckDB(middlew.ValidarJWT(routers.SubirAvatar))).Methods("POST")
 	router.HandleFunc("/obtenerAvatar", middlew.CheckDB(routers.ObtenerAvatar)).Methods("GET")
 	router.HandleFunc("/subirBanner", middlew.CheckDB(middlew.ValidarJWT(routers.SubirBanner))).Methods("POST")
 	router.HandleFunc("/obtenerBanner", middlew.CheckDB(routers.ObtenerBanner)).Methods("GET")
+
 	router.HandleFunc("/altaRelacion", middlew.CheckDB(middlew.ValidarJWT(routers.AltaRelacion))).Methods("POST")
 	router.HandleFunc("/bajaRelacion", middlew.CheckDB(middlew.ValidarJWT(routers.BajaRelacion))).Methods("DELETE")
+	router.HandleFunc("/consultaRelacion", middlew.CheckDB(routers.ConsultaRelacion)).Methods("GET")
+
+	router.HandleFunc("/listaUsuarios", middlew.CheckDB(routers.ListaUsuarios)).Methods("GET")
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {
