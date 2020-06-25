@@ -7,8 +7,8 @@ import (
 	"github.com/ArturoArreola/demo-social-network/bd"
 )
 
-// AltaRelacion realiza el registro de la relacion entre usuarios
-func AltaRelacion(w http.ResponseWriter, r *http.Request) {
+// BajaRelacion realiza la eliminación de la relacion entre usuarios
+func BajaRelacion(w http.ResponseWriter, r *http.Request) {
 
 	ID := r.URL.Query().Get("id")
 	if len(ID) < 1 {
@@ -20,18 +20,17 @@ func AltaRelacion(w http.ResponseWriter, r *http.Request) {
 	relacion.UsuarioID = IDUsuario
 	relacion.UsuarioRelacionID = ID
 
-	estatus, err := bd.InsertarRelacion(relacion)
+	estatus, err := bd.BorrarRelacion(relacion)
 
 	if err != nil {
-		http.Error(w, "Error al intentar insertar en la base de datos -> " + err.Error(), http.StatusBadRequest)
+		http.Error(w, "Error al intentar borrar en la base de datos -> " + err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if estatus == false {
-		http.Error(w, "No se logró insertar la relación -> " + err.Error(), http.StatusBadRequest)
+		http.Error(w, "No se logró borrar la relación -> " + err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-
+	w.WriteHeader(http.StatusOK)
 }
