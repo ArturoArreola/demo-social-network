@@ -11,16 +11,11 @@ import (
 func BajaRelacion(w http.ResponseWriter, r *http.Request) {
 
 	ID := r.URL.Query().Get("id")
-	if len(ID) < 1 {
-		http.Error(w, "El parámetro ID es obligatorio", http.StatusBadRequest)
-		return
-	}
+	var t models.Relacion
+	t.UsuarioID = IDUsuario
+	t.UsuarioRelacionID = ID
 
-	var relacion models.Relacion
-	relacion.UsuarioID = IDUsuario
-	relacion.UsuarioRelacionID = ID
-
-	estatus, err := bd.BorrarRelacion(relacion)
+	estatus, err := bd.BorrarRelacion(t)
 
 	if err != nil {
 		http.Error(w, "Error al intentar borrar en la base de datos -> " + err.Error(), http.StatusBadRequest)

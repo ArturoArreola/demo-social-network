@@ -17,6 +17,7 @@ func CheckUsuarioExiste(email string) (models.Usuario, bool, string) {
 	coleccion := db.Collection("usuarios")
 
 	condicion := bson.M{"email": email}
+
 	var resultado models.Usuario
 
 	err := coleccion.FindOne(ctx, condicion).Decode(&resultado)

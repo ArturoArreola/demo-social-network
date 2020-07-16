@@ -16,35 +16,31 @@ var Email string
 var IDUsuario string
 
 // ProcesarToken es la función donde se procesa el token para obtener sus valores
-func ProcesarToken(token string) (*models.Claim, bool, string, error) {
+func ProcesarToken(tk string) (*models.Claim, bool, string, error) {
 
 	miClave := []byte("not13n3!")
 	claims := &models.Claim{}
-	splitToken := strings.Split(token, "Bearer")
 
+	splitToken := strings.Split(tk, "Bearer")
 	if len(splitToken) != 2 {
-		return claims, false, string(""), errors.New("Formato de token inválido")
+		return claims, false, string(""), errors.New("formato de token invalido")
 	}
 
-	token = strings.TrimSpace(splitToken[1])
+	tk = strings.TrimSpace(splitToken[1])
 
-	tkn, err := jwt.ParseWithClaims(token, claims, func(tk *jwt.Token) (interface{}, error) {
+	tkn, err := jwt.ParseWithClaims(tk, claims, func(token *jwt.Token) (interface{}, error) {
 		return miClave, nil
 	})
-
 	if err == nil {
 		_, encontrado, _ := bd.CheckUsuarioExiste(claims.Email)
 		if encontrado == true {
 			Email = claims.Email
 			IDUsuario = claims.ID.Hex()
 		}
-
 		return claims, encontrado, IDUsuario, nil
 	}
-
 	if !tkn.Valid {
-		return claims, false, string(""), errors.New("Token inválido")
+		return claims, false, string(""), errors.New("token Inválido")
 	}
-
 	return claims, false, string(""), err
 }

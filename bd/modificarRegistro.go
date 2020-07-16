@@ -10,7 +10,7 @@ import (
 )
 
 // ModificarRegistro permite modificar el perfil del usuario
-func ModificarRegistro (usuario models.Usuario, ID string) (bool, error){
+func ModificarRegistro (u models.Usuario, ID string) (bool, error){
 
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
@@ -19,47 +19,40 @@ func ModificarRegistro (usuario models.Usuario, ID string) (bool, error){
 	coleccion := db.Collection("usuarios")
 
 	registro := make(map[string]interface{})
-
-	if len(usuario.Nombre) > 0 {
-		registro["nombre"] = usuario.Nombre
+	if len(u.Nombre) > 0 {
+		registro["nombre"] = u.Nombre
+	}
+	if len(u.Apellidos) > 0 {
+		registro["apellidos"] = u.Apellidos
+	}
+	registro["fechaNacimiento"] = u.FechaNacimiento
+	if len(u.Avatar) > 0 {
+		registro["avatar"] = u.Avatar
+	}
+	if len(u.Banner) > 0 {
+		registro["banner"] = u.Banner
+	}
+	if len(u.Biografia) > 0 {
+		registro["biografia"] = u.Biografia
+	}
+	if len(u.Ubicacion) > 0 {
+		registro["ubicacion"] = u.Ubicacion
+	}
+	if len(u.SitioWeb) > 0 {
+		registro["sitioWeb"] = u.SitioWeb
 	}
 
-	if len(usuario.Apellidos) > 0 {
-		registro["apellidos"] = usuario.Apellidos
+	updtString := bson.M{
+		"$set": registro,
 	}
-
-	if len(usuario.Avatar) > 0 {
-		registro["avatar"] = usuario.Avatar
-	}
-
-	if len(usuario.Banner) > 0 {
-		registro["banner"] = usuario.Banner
-	}
-
-	if len(usuario.Biografia) > 0 {
-		registro["biografia"] = usuario.Biografia
-	}
-
-	if len(usuario.Ubicacion) > 0 {
-		registro["ubicacion"] = usuario.Ubicacion
-	}
-
-	if len(usuario.SitioWeb) > 0 {
-		registro["sitioWeb"] = usuario.SitioWeb
-	}
-
-	registro["fechaNacimiento"] = usuario.FechaNacimiento
-
-	cadenaUpdate := bson.M{"$set":registro}
 
 	objID, _ := primitive.ObjectIDFromHex(ID)
+	filtro := bson.M{"_id": bson.M{"$eq": objID}}
 
-	filtro := bson.M{"_id":bson.M{"$eq":objID}}
-
-	_, err := coleccion.UpdateOne(ctx, filtro, cadenaUpdate)
-
+	_, err := coleccion.UpdateOne(ctx, filtro, updtString)
 	if err != nil {
 		return false, err
 	}
+
 	return true, nil
 }

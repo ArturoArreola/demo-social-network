@@ -16,11 +16,11 @@ func BorrarPublicacion (w http.ResponseWriter, r *http.Request)  {
 
 	err := bd.BorrarPost(ID, IDUsuario)
 	if err != nil {
-		http.Error(w, "Ocurrió un error al intentar borrar el post" + err.Error(), http.StatusBadRequest)
+		http.Error(w, "Ocurrió un error al intentar borrar el tweet "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	w.Header().Set("content-type", "application/json")
+	w.Header().Set("Content-type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 }

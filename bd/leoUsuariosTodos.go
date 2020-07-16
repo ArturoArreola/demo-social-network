@@ -2,7 +2,6 @@ package bd
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/ArturoArreola/demo-social-network/models"
@@ -20,34 +19,33 @@ func LeerUsuariosTodos(ID string, page int64, search string, tipo string) ([]*mo
 	db := MongoCN.Database("social-network-db")
 	coleccion := db.Collection("usuarios")
 
-	var resultados []*models.Usuario
-	findoptions := options.Find()
-	findoptions.SetSkip((page-1)*20)
-	findoptions.SetLimit(20)
+	var results []*models.Usuario
+
+	findOptions := options.Find()
+	findOptions.SetSkip((page - 1) * 20)
+	findOptions.SetLimit(20)
 
 	query := bson.M{
 		"nombre": bson.M{"$regex": `(?i)` + search},
 	}
 
-	cursor, err := coleccion.Find(ctx, query, findoptions)
+	cur, err := coleccion.Find(ctx, query, findOptions)
 	if err != nil {
-		fmt.Println(err.Error())
-		return resultados, false
+		return results, false
 	}
 
 	var encontrado, incluir bool
 
-	for cursor.Next(ctx){
-		var usuario models.Usuario
-		err := cursor.Decode(&usuario)
+	for cur.Next(ctx) {
+		var s models.Usuario
+		err := cur.Decode(&s)
 		if err != nil {
-			fmt.Println(err.Error())
-			return resultados, false
+			return results, false
 		}
 
 		var r models.Relacion
 		r.UsuarioID = ID
-		r.UsuarioRelacionID = usuario.ID.Hex()
+		r.UsuarioRelacionID = s.ID.Hex()
 
 		incluir = false
 
@@ -55,7 +53,6 @@ func LeerUsuariosTodos(ID string, page int64, search string, tipo string) ([]*mo
 		if tipo == "new" && encontrado == false {
 			incluir = true
 		}
-
 		if tipo == "follow" && encontrado == true {
 			incluir = true
 		}
@@ -65,23 +62,22 @@ func LeerUsuariosTodos(ID string, page int64, search string, tipo string) ([]*mo
 		}
 
 		if incluir == true {
-			usuario.Password 	= ""
-			usuario.Biografia 	= ""
-			usuario.SitioWeb 	= ""
-			usuario.Ubicacion 	= ""
-			usuario.Banner 		= ""
-			usuario.Email 		= ""
+			s.Password = ""
+			s.Biografia = ""
+			s.SitioWeb = ""
+			s.Ubicacion = ""
+			s.Banner = ""
+			s.Email = ""
 
-			resultados = append(resultados, & usuario)
+			results = append(results, &s)
 		}
 	}
 
-	err = cursor.Err()
+	err = cur.Err()
 	if err != nil {
-		fmt.Println(err.Error())
-		return resultados, false
+		return results, false
 	}
-
-	return resultados, true
+	cur.Close(ctx)
+	return results, true
 
 }

@@ -10,24 +10,22 @@ import (
 
 // ConsultaRelacion checa si hay relación entre 2 usuarios
 func ConsultaRelacion(w http.ResponseWriter, r *http.Request) {
-
 	ID := r.URL.Query().Get("id")
 
-	var relacion models.Relacion
-	relacion.UsuarioID = IDUsuario
-	relacion.UsuarioRelacionID = ID
+	var t models.Relacion
+	t.UsuarioID = IDUsuario
+	t.UsuarioRelacionID = ID
 
-	var respuesta models.RespuestaRelacion
+	var resp models.RespuestaRelacion
 
-	status, err := bd.ConsultaRelacion(relacion)
+	status, err := bd.ConsultaRelacion(t)
 	if err != nil || status == false {
-		respuesta.Status = false
+		resp.Status = false
 	} else {
-		respuesta.Status = true
+		resp.Status = true
 	}
 
-	w.Header().Set("Content-type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(respuesta)
-
+	json.NewEncoder(w).Encode(resp)
 }

@@ -16,22 +16,19 @@ func AltaRelacion(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var relacion models.Relacion
-	relacion.UsuarioID = IDUsuario
-	relacion.UsuarioRelacionID = ID
+	var t models.Relacion
+	t.UsuarioID = IDUsuario
+	t.UsuarioRelacionID = ID
 
-	estatus, err := bd.InsertarRelacion(relacion)
-
+	status, err := bd.InsertarRelacion(t)
 	if err != nil {
-		http.Error(w, "Error al intentar insertar en la base de datos -> " + err.Error(), http.StatusBadRequest)
+		http.Error(w, "Ocurrió un error al intentar insertar relación "+err.Error(), http.StatusBadRequest)
 		return
 	}
-
-	if estatus == false {
-		http.Error(w, "No se logró insertar la relación -> " + err.Error(), http.StatusBadRequest)
+	if status == false {
+		http.Error(w, "No se ha logrado insertar la relación "+err.Error(), http.StatusBadRequest)
 		return
 	}
-
 	w.WriteHeader(http.StatusCreated)
 
 }

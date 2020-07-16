@@ -19,11 +19,10 @@ func BorrarPost (PostID string, UserID string) error {
 	objID, _ := primitive.ObjectIDFromHex(PostID)
 
 	condicion := bson.M{
-		"_id": 		objID,
-		"userid": 	UserID,
+		"_id":    objID,
+		"userid": UserID,
 	}
 
 	_, err := coleccion.DeleteOne(ctx, condicion)
-
 	return err
 }

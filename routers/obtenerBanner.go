@@ -13,7 +13,7 @@ func ObtenerBanner(w http.ResponseWriter, r *http.Request) {
 
 	ID := r.URL.Query().Get("id")
 	if len(ID) < 1 {
-		http.Error(w, "Debe de enviar el parámetro ID", http.StatusBadRequest)
+		http.Error(w, "Debe enviar el parámetro ID", http.StatusBadRequest)
 		return
 	}
 
@@ -23,14 +23,14 @@ func ObtenerBanner(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Imagen, err := os.Open("uploads/banners/"+perfil.Banner)
+	OpenFile, err := os.Open("uploads/banners/" + perfil.Banner)
 	if err != nil {
-		http.Error(w, "Avatar no encontrado", http.StatusBadRequest)
+		http.Error(w, "Imagen no encontrada", http.StatusBadRequest)
 		return
 	}
 
-	_, err = io.Copy(w, Imagen)
+	_, err = io.Copy(w, OpenFile)
 	if err != nil {
-		http.Error(w, "Error al copiar la imagen del banner", http.StatusBadRequest)
+		http.Error(w, "Error al copiar la imagen", http.StatusBadRequest)
 	}
 }

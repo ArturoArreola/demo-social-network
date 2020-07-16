@@ -12,45 +12,39 @@ import (
 
 //	Login es la función para realizar el inicio de sesión
 func Login(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+	w.Header().Add("content-type", "application/json")
 
-	var usuario models.Usuario
+	var t models.Usuario
 
-	err := json.NewDecoder(r.Body).Decode(&usuario)
-
+	err := json.NewDecoder(r.Body).Decode(&t)
 	if err != nil {
-		http.Error(w, "El usuario y/o contraseña son incorrectos"+err.Error(), 400)
+		http.Error(w, "Usuario y/o Contraseña inválidos "+err.Error(), 400)
 		return
 	}
-
-	if len(usuario.Email) == 0 {
-		http.Error(w, "El email es un campo requerido", 400)
+	if len(t.Email) == 0 {
+		http.Error(w, "El email del usuario es requerido ", 400)
 		return
 	}
-
-	documento, existe := bd.IntentoLogin(usuario.Email, usuario.Password)
-
+	documento, existe := bd.IntentoLogin(t.Email, t.Password)
 	if existe == false {
-		http.Error(w, "El usuario y/o contraseña son incorrectos", 400)
+		http.Error(w, "Usuario y/o Contraseña inválidos ", 400)
 		return
 	}
 
 	jwtKey, err := jwt.GenerarJWT(documento)
-
 	if err != nil {
-		http.Error(w, "Ocurrió un error"+err.Error(), 500)
+		http.Error(w, "Ocurrió un error al intentar general el Token correspondiente "+err.Error(), 400)
 		return
 	}
 
-	respuesta := models.RespuestaLogin{
+	resp := models.RespuestaLogin{
 		Token: jwtKey,
 	}
 
-	w.Header().Set("Content-Type", "aplication/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(respuesta)
+	json.NewEncoder(w).Encode(resp)
 
-	//	Manera de grabar una cookie desde el backend en Go
 	expirationTime := time.Now().Add(24 * time.Hour)
 	http.SetCookie(w, &http.Cookie{
 		Name:    "token",

@@ -19,27 +19,27 @@ func SubirAvatar(w http.ResponseWriter, r *http.Request) {
 
 	f, err := os.OpenFile(archivo, os.O_WRONLY|os.O_CREATE, 0666)
 	if err != nil {
-		http.Error(w, "Error al subir la imagen -> " + err.Error(),400)
+		http.Error(w, "Error al subir la imagen ! "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	_, err = io.Copy(f, file)
 	if err != nil {
-		http.Error(w, "Error al copiar la imagen -> " + err.Error(),400)
+		http.Error(w, "Error al copiar la imagen ! "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	var usuario models.Usuario
 	var status bool
 
-	usuario.Avatar = "avatar-" + IDUsuario + "." + extension
-	status, err2 := bd.ModificarRegistro(usuario, IDUsuario)
-	if err2 != nil || status == false {
-		http.Error(w, "Error al guardar el avatar en la base de datos-> " + err2.Error(),400)
+	usuario.Avatar = IDUsuario + "." + extension
+	status, err = bd.ModificarRegistro(usuario, IDUsuario)
+	if err != nil || status == false {
+		http.Error(w, "Error al grabar el avatar en la BD ! "+err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	w.Header().Set("content-type","application/json")
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
 }

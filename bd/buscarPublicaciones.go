@@ -2,7 +2,6 @@ package bd
 
 import (
 	"context"
-	"log"
 	"time"
 
 	"github.com/ArturoArreola/demo-social-network/models"
@@ -19,34 +18,30 @@ func BuscarPublicaciones (ID string, pagina int64) ([]*models.ObtenerPosts, bool
 	db := MongoCN.Database("social-network-db")
 	coleccion := db.Collection("tweet")
 
-	var resultado []*models.ObtenerPosts
+	var resultados []*models.ObtenerPosts
 
 	condicion := bson.M{
-		"userid":ID,
+		"userid": ID,
 	}
 
 	opciones := options.Find()
 	opciones.SetLimit(20)
-	opciones.SetSort(bson.D{{Key: "fecha", Value: -1}})		// Va a traer todos los valores ordenados por fecha en orden descendente (esto último se indica con el -1)
-	opciones.SetSkip((pagina -1) * 20)
+	opciones.SetSort(bson.D{{Key: "fecha", Value: -1}})
+	opciones.SetSkip((pagina - 1) * 20)
 
 	cursor, err := coleccion.Find(ctx, condicion, opciones)
-
 	if err != nil {
-		log.Fatal(err.Error())
-		return resultado, false
+		return resultados, false
 	}
 
-	for cursor.Next(context.TODO()){
+	for cursor.Next(context.TODO()) {
+
 		var registro models.ObtenerPosts
 		err := cursor.Decode(&registro)
 		if err != nil {
-			return resultado, false
+			return resultados, false
 		}
-
-		resultado = append(resultado, &registro)
+		resultados = append(resultados, &registro)
 	}
-
-	return resultado, true
-
+	return resultados, true
 }

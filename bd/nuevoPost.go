@@ -19,19 +19,15 @@ func NuevoPost(publicacion models.GrabarPost) (string, bool, error) {
 	coleccion := db.Collection("tweet")
 
 	registro := bson.M{
-		"userid": publicacion.UserID,
+		"userid":  publicacion.UserID,
 		"mensaje": publicacion.Mensaje,
-		"fecha": publicacion.Fecha,
+		"fecha":   publicacion.Fecha,
 	}
-
 	result, err := coleccion.InsertOne(ctx, registro)
-
 	if err != nil {
 		return "", false, err
 	}
 
 	objID, _ := result.InsertedID.(primitive.ObjectID)
-
 	return objID.String(), true, nil
-
 }
